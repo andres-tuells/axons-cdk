@@ -9,3 +9,4 @@ export * from './function-to-stream-axon';
 export * from './topic-to-function-axon';
 export * from './function-to-topic-axon';
 export * from './rule-to-function-axon';
+export * from './rule-to-queue-axon';
