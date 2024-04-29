@@ -12,7 +12,7 @@ export class QueueToFunctionAxon extends Construct {
     id: string,
     source: Queue,
     target: IFunction,
-    props: SqsEventSourceProps
+    props?: SqsEventSourceProps
   ) {
     super(scope, id);
     target.addEventSource(new SqsEventSource(source, props));

@@ -15,7 +15,7 @@ export class FunctionToQueueAxon extends Construct {
     id: string,
     source: IFunction,
     target: Queue,
-    props: FunctionToQueueAxonProps
+    props?: FunctionToQueueAxonProps
   ) {
     super(scope, id);
     const propsWithdefaults = merge(

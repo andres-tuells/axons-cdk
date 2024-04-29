@@ -19,7 +19,7 @@ export class FunctionToBucketAxon extends Construct {
     id: string,
     source: IFunction,
     target: Bucket,
-    props: FunctionToBucketAxonProps
+    props?: FunctionToBucketAxonProps
   ) {
     super(scope, id);
     const propsWithdefaults = merge(

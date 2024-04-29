@@ -12,7 +12,7 @@ export class BucketToFunctionAxon extends Construct {
     id: string,
     source: Bucket,
     target: IFunction,
-    props: S3EventSourceProps
+    props?: S3EventSourceProps
   ) {
     super(scope, id);
     target.addEventSource(new S3EventSourceV2(source, props));
