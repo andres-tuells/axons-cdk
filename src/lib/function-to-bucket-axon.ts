@@ -1,4 +1,4 @@
-import { IFunction } from 'aws-cdk-lib/aws-lambda';
+import { Function as LambdaFunction } from 'aws-cdk-lib/aws-lambda';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 import { merge } from 'lodash';
@@ -11,22 +11,28 @@ export type FunctionToBucketPermission =
 
 export type FunctionToBucketAxonProps = {
   permissions?: FunctionToBucketPermission[];
+  bucketEnvironmentVariableName?: string;
 };
 
 export class FunctionToBucketAxon extends Construct {
   constructor(
     scope: Construct,
     id: string,
-    source: IFunction,
+    source: LambdaFunction,
     target: Bucket,
     props?: FunctionToBucketAxonProps
   ) {
     super(scope, id);
     const propsWithdefaults = merge(
       {
-        permissions: ['send']
+        permissions: ['readwrite'],
+        bucketEnvironmentVariableName: 'BUCKET_NAME'
       },
       props
+    );
+    source.addEnvironment(
+      propsWithdefaults.bucketEnvironmentVariableName,
+      target.bucketName
     );
     propsWithdefaults.permissions.forEach(
       (permission: FunctionToBucketPermission) => {

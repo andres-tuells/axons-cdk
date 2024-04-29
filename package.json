@@ -15,7 +15,7 @@
     "lint-and-fix": "eslint . --ext .ts --fix",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
-    "build": "npm run prettier-format && npm run lint-and-fix && rimraf ./build && tsc",
+    "build": "npm run prettier-format && npm run lint-and-fix && rimraf ./dist && tsc",
     "watch": "tsc -w",
     "test": "jest",
     "coverage": "jest --coverage"

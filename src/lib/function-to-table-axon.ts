@@ -1,5 +1,5 @@
 import { Table } from 'aws-cdk-lib/aws-dynamodb';
-import { IFunction } from 'aws-cdk-lib/aws-lambda';
+import { Function as LambdaFunction } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 import { merge } from 'lodash';
 
@@ -10,22 +10,28 @@ export type FunctionToTablePermission =
 
 export type FunctionToTableAxonProps = {
   permissions?: FunctionToTablePermission[];
+  tableEnvironmentVariableName?: string;
 };
 
 export class FunctionToTableAxon extends Construct {
   constructor(
     scope: Construct,
     id: string,
-    source: IFunction,
+    source: LambdaFunction,
     target: Table,
     props?: FunctionToTableAxonProps
   ) {
     super(scope, id);
     const propsWithdefaults = merge(
       {
-        permissions: ['send']
+        permissions: ['full-access'],
+        tableEnvironmentVariableName: 'TABLE_NAME'
       },
       props
+    );
+    source.addEnvironment(
+      propsWithdefaults.tableEnvironmentVariableName,
+      target.tableName
     );
     propsWithdefaults.permissions.forEach(
       (permission: FunctionToTablePermission) => {
