@@ -1,7 +1,6 @@
 import { Stream } from 'aws-cdk-lib/aws-kinesis';
 import { Function as LambdaFunction } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
-import { merge } from 'lodash';
 
 export type FunctionToStreamAxonProps = {
   streamEnvironmentVariableName?: string;
@@ -16,14 +15,12 @@ export class FunctionToStreamAxon extends Construct {
     props?: FunctionToStreamAxonProps
   ) {
     super(scope, id);
-    const propsWithdefaults = merge(
-      {
-        streamEnvironmentVariableName: 'STREAM_NAME'
-      },
-      props
-    );
+    const propsWithDefaults = {
+      streamEnvironmentVariableName: 'STREAM_NAME',
+      ...props
+    };
     source.addEnvironment(
-      propsWithdefaults.streamEnvironmentVariableName,
+      propsWithDefaults.streamEnvironmentVariableName,
       target.streamName
     );
     target.grantWrite(source.grantPrincipal);

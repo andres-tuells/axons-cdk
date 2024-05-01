@@ -4,18 +4,12 @@ import {
   DynamoEventSource,
   DynamoEventSourceProps
 } from 'aws-cdk-lib/aws-lambda-event-sources';
-import { Construct } from 'constructs';
 
-export class TableToFunctionAxon extends Construct {
-  constructor(
-    scope: Construct,
-    id: string,
-    source: Table,
-    target: IFunction,
-    props?: DynamoEventSourceProps
-  ) {
-    super(scope, id);
-    target.addEventSource(new DynamoEventSource(source, props));
-    source.grantStreamRead(target);
-  }
+export function tableToFunction(
+  source: Table,
+  target: IFunction,
+  props?: DynamoEventSourceProps
+): void {
+  target.addEventSource(new DynamoEventSource(source, props));
+  source.grantStreamRead(target);
 }
