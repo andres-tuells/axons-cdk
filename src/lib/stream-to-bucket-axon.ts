@@ -15,6 +15,7 @@ export type StreamToBucketProps = {
 export class StreamToBucket extends Construct {
 
   readonly firehoseDeliveryStream: CfnDeliveryStream;
+  readonly firehoseRole: Role;
 
   constructor(scope: Construct, id: string, source: Stream, target: Bucket, props?: StreamToBucketProps) {
     super(scope, id);
@@ -30,19 +31,19 @@ export class StreamToBucket extends Construct {
       ...props,
     }
 
-    const firehoseRole = new Role(this, 'FirehoseRole', {
+    this.firehoseRole = new Role(this, 'FirehoseRole', {
       assumedBy: new ServicePrincipal('firehose.amazonaws.com')
     });
 
-    source.grantRead(firehoseRole);
-    target.grantReadWrite(firehoseRole);
+    source.grantRead(this.firehoseRole);
+    target.grantReadWrite(this.firehoseRole);
 
     // Create Kinesis Firehose Delivery Stream
     this.firehoseDeliveryStream = new CfnDeliveryStream(this, 'FirehoseDeliveryStream', {
       deliveryStreamType: 'DirectPut',
       s3DestinationConfiguration: {
         bucketArn: target.bucketArn,
-        roleArn: firehoseRole.roleArn,
+        roleArn: this.firehoseRole.roleArn,
         prefix: propsWithDefaults.prefix,
         errorOutputPrefix: propsWithDefaults.errorOutputPrefix,
         bufferingHints: propsWithDefaults.bufferingHints,
@@ -50,7 +51,7 @@ export class StreamToBucket extends Construct {
       },
       kinesisStreamSourceConfiguration: {
         kinesisStreamArn: source.streamArn,
-        roleArn: firehoseRole.roleArn, // Use the ARN of the created role
+        roleArn: this.firehoseRole.roleArn, // Use the ARN of the created role
       },
     });
   }
