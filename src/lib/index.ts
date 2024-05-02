@@ -12,3 +12,4 @@ export * from './rule-to-function-axon';
 export * from './rule-to-queue-axon';
 export * from './topic-to-queue-axon';
 export * from './function-to-secret-axon';
+export * from './stream-to-bucket-axon';
